@@ -1,10 +1,8 @@
 package com.springboot.springboot.Config;
 
-import com.springboot.springboot.Services.ChineEngineImpl;
-import com.springboot.springboot.Services.EngineFactory;
-import com.springboot.springboot.Services.EngineService;
-import com.springboot.springboot.Services.VnEngineImpl;
+import com.springboot.springboot.Services.*;
 import com.springboot.springboot.database.Database;
+import com.springboot.springboot.repositories.ProductRepositories;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -13,7 +11,6 @@ import org.springframework.context.annotation.Primary;
 // được gọi ngay khi ứng dụng chạy
 @Configuration
 public class EngineConfig {
-
     // use engine factory
     @Bean
     public EngineFactory engineFactory()
@@ -21,11 +18,8 @@ public class EngineConfig {
        return new EngineFactory();
     }
 
-    @Bean
-    public Database database()
-    {
-        return new Database();
-    }
+
+
     @Bean
 
     public EngineService chineEngine(EngineFactory engineFactory)
@@ -38,4 +32,5 @@ public class EngineConfig {
     {
         return engineFactory.createEngineServiceFactory("vnEngine");
     }
+
 }

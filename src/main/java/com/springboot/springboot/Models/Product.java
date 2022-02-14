@@ -1,23 +1,46 @@
 package com.springboot.springboot.Models;
+import lombok.Data;
+import javax.persistence.*;
+import java.util.Calendar;
+import java.util.Objects;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
+@Data
 @Entity
+@Table(name = "Product")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)// auto increment
+//  @GeneratedValue(strategy = GenerationType.AUTO)// auto increment
+
+    // quy tắc tạo ra trường id;
+    @SequenceGenerator(
+            name = "product_sequence",
+            sequenceName = "product_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "product_sequence"
+    )
     private long id;
+
+    //validator
+    @Column(nullable = false, unique = true, length = 300)
     private String productName;
     private int year;
     private Double price;
     private String url;
+    //calculated field = transient // không được lưu trong CSDL nhưng được tính từ các trường khác
+    @Transient
+    private int age;
 
-    public Product(){}
+    public int getAge() {
+        return Calendar.getInstance().get(Calendar.YEAR) - year;
+    }
 
-    public Product( String productName, int year, Double price, String url) {
+    public Product()
+    {}
+
+    public Product(String productName, int year, Double price, String url) {
 
         this.productName = productName;
         this.year = year;
@@ -74,5 +97,24 @@ public class Product {
                 ", price=" + price +
                 ", url='" + url + '\'' +
                 '}';
+    }
+    // khi nào two product được xem là giống nhau về nội dung
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return id == product.id
+                && year == product.year
+                && age == product.age
+                && Objects.equals(productName, product.productName)
+                && Objects.equals(price, product.price)
+                && Objects.equals(url, product.url);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, productName, year, price, url, age);
     }
 }

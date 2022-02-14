@@ -1,11 +1,21 @@
 package com.springboot.springboot.repositories;
-
 import com.springboot.springboot.Models.Product;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface ProductRepositories extends JpaRepository<Product,Long> {
+import java.util.List;
+import java.util.Optional;
 
+
+public interface ProductRepositories extends JpaRepository<Product,Long> {
+    // JPA support feature make function auto create for customer can create anytime\
+    // Note function contain Entity same Entity in table
+    // nếu khong tìm thấy phương thức đã tạo sẳn, thì có thể tạo 1 câu truy vấn theo tên phương thức
+    List<Product> findByProductName(String name);
+    Optional<Product> findByIdAndProductName(Long id, String name);
+    List<Product> findDistinctProductByProductName(String firstname);
+    List<Product> findAllByProductNameAndYear(String productName,int year, Pageable pageable);
 //    @Override
 //    public List<Product> findAll() {
 //        return null;
